@@ -1,5 +1,5 @@
 CC=clang
-OUTPUT=com.laobamac.oclp-mod.privileged-helper
+OUTPUT=com.fukayatti0.oclp-mod.privileged-helper
 
 all: clean release
 
