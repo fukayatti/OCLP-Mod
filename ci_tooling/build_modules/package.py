@@ -21,7 +21,7 @@ class GeneratePackage:
         """
         self._files = {
             "./dist/OCLP-Mod.app": "/Library/Application Support/laobamac/OCLP-Mod.app",
-            "./ci_tooling/privileged_helper_tool/com.laobamac.oclp-mod.privileged-helper": "/Library/PrivilegedHelperTools/com.laobamac.oclp-mod.privileged-helper",
+            "./ci_tooling/privileged_helper_tool/com.fukayatti0.oclp-mod.privileged-helper": "/Library/PrivilegedHelperTools/com.fukayatti0.oclp-mod.privileged-helper",
             "./utils/OCLP-Mod.app": "/Applications/OCLP-Mod.app",
         }
         self._autopkg_files = {
