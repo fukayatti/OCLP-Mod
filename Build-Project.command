@@ -7,6 +7,7 @@ import os
 import sys
 import time
 import argparse
+import subprocess
 
 from pathlib import Path
 
@@ -77,6 +78,10 @@ def main() -> None:
         disk_images.GenerateDiskImages(args.reset_dmg_cache).generate()
 
     if (args.run_as_individual_steps is False) or (args.run_as_individual_steps and args.prepare_application):
+        # Build Privileged Helper Tool
+        print("Building Privileged Helper Tool...")
+        subprocess.run(["make", "-C", "ci_tooling/privileged_helper_tool", "clean", "release"], check=True)
+
         # Prepare Privileged Helper Tool
         sign_notarize.SignAndNotarize(
             path=Path("./ci_tooling/privileged_helper_tool/com.laobamac.oclp-mod.privileged-helper"),
