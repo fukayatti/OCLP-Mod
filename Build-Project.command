@@ -84,7 +84,7 @@ def main() -> None:
 
         # Prepare Privileged Helper Tool
         sign_notarize.SignAndNotarize(
-            path=Path("./ci_tooling/privileged_helper_tool/com.laobamac.oclp-mod.privileged-helper"),
+            path=Path("./ci_tooling/privileged_helper_tool/com.fukayatti0.oclp-mod.privileged-helper"),
             signing_identity=args.application_signing_identity,
             notarization_apple_id=args.notarization_apple_id,
             notarization_password=args.notarization_password,

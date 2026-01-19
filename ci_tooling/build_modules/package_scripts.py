@@ -285,7 +285,7 @@ class GenerateScripts:
         self.files = [
             "Library/Application Support/laobamac/Update.plist",
             "Library/Application Support/laobamac/OCLP-Mod.app",
-            "Library/PrivilegedHelperTools/com.laobamac.oclp-mod.privileged-helper",
+            "Library/PrivilegedHelperTools/com.fukayatti0.oclp-mod.privileged-helper",
             "Applications/OCLP-Mod.app"
         ]
 
@@ -396,7 +396,7 @@ class GenerateScripts:
         _script += self._generate_label_bar()
         _script += "\n"
 
-        _script += "helperPath=\"Library/PrivilegedHelperTools/com.laobamac.oclp-mod.privileged-helper\"\n"
+        _script += "helperPath=\"Library/PrivilegedHelperTools/com.fukayatti0.oclp-mod.privileged-helper\"\n"
         _script += "mainAppPath=\"Library/Application Support/laobamac/OCLP-Mod.app\"\n"
         if is_autopkg:
             _script += "executablePath=\"$mainAppPath/Contents/MacOS/OCLP-Mod\"\n"
