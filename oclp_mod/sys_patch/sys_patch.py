@@ -166,7 +166,7 @@ class PatchSysVolume:
         return True
 
 
-    def _merge_kdk_with_root(self, save_hid_cs: bool = False) -> None:
+    def _merge_kdk_with_root(self, save_hid_cs: bool = False, install_wifi_frameworks: bool = False) -> None:
         """
         Merge Kernel Debug Kit (KDK) with the root volume
         If no KDK is present, will call kdk_handler to download and install it
@@ -174,12 +174,13 @@ class PatchSysVolume:
         Parameters:
             save_hid_cs (bool): If True, will save the HID CS file before merging KDK
                                 Required for USB 1.1 downgrades on Ventura and newer
+            install_wifi_frameworks (bool): If True, will merge Apple80211.framework from KDK
         """
         self.kdk_path = KernelDebugKitMerge(
             self.constants,
             self.mount_location,
             self.skip_root_kmutil_requirement
-        ).merge(save_hid_cs)
+        ).merge(save_hid_cs, install_wifi_frameworks)
 
 
     def _unpatch_root_vol(self):
@@ -552,7 +553,17 @@ class PatchSysVolume:
             sys_patch_helpers.SysPatchHelpers(self.constants).snb_board_id_patch(source_files_path)
 
         # 确保 KDK 正确安装
-        self._merge_kdk_with_root(save_hid_cs=True if "Legacy USB 1.1" in required_patches else False)
+        install_wifi_frameworks = False
+        if self.constants.detected_os >= os_data.os_data.tahoe:
+            for patch in required_patches:
+                if patch in ["BCM无线网卡", "Intel无线网卡", "Intel/BCM双网卡", "Modern Wireless"]:
+                    install_wifi_frameworks = True
+                    break
+
+        self._merge_kdk_with_root(
+            save_hid_cs=True if "Legacy USB 1.1" in required_patches else False,
+            install_wifi_frameworks=install_wifi_frameworks
+        )
 
         logging.info("- 完成预检，开始打补丁")
 

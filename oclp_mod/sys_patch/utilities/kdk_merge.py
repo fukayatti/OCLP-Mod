@@ -73,7 +73,7 @@ class KernelDebugKitMerge:
         subprocess_wrapper.run_as_root(["/bin/rm", "-rf", f"{self.constants.payload_path}/IOHIDEventDriver_CodeSignature.bak"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 
-    def _merge_kdk(self, kdk_path: str) -> None:
+    def _merge_kdk(self, kdk_path: str, install_wifi_frameworks: bool = False) -> None:
         """
         Merge Kernel Debug Kit (KDK) with the root volume
         """
@@ -85,13 +85,25 @@ class KernelDebugKitMerge:
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
 
+        if install_wifi_frameworks:
+            logging.info("- 将 Apple80211.framework 与根卷合并")
+            # Ensure parent directory exists
+            subprocess_wrapper.run_as_root(
+                ["/bin/mkdir", "-p", f"{self.mount_location}/System/Library/PrivateFrameworks"],
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            subprocess_wrapper.run_as_root(
+                ["/usr/bin/rsync", "-r", "-i", "-a", f"{kdk_path}/System/Library/PrivateFrameworks/Apple80211.framework", f"{self.mount_location}/System/Library/PrivateFrameworks/"],
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+
         if not (Path(self.mount_location) / Path("System/Library/Extensions/System.kext/PlugIns/Libkern.kext/Libkern")).exists():
             logging.info("- 无法将 KDK 与根卷合并")
             raise Exception("Failed to merge KDK with Root Volume")
         logging.info("- 成功将 KDK 与 Root Volume 合并")
 
 
-    def merge(self, save_hid_cs: bool = False) -> str:
+    def merge(self, save_hid_cs: bool = False, install_wifi_frameworks: bool = False) -> str:
         """
         Merge the Kernel Debug Kit (KDK) with the root volume
 
@@ -159,7 +171,7 @@ class KernelDebugKitMerge:
         if save_hid_cs is True:
             self._backup_hid_cs()
 
-        self._merge_kdk(kdk_path)
+        self._merge_kdk(kdk_path, install_wifi_frameworks)
 
         if save_hid_cs is True:
             self._restore_hid_cs()
