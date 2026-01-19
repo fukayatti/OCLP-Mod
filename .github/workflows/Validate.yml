@@ -12,7 +12,7 @@ jobs:
   build:
     name: Validate
     runs-on: macos-26
-    if: github.repository_owner == 'laobamac'
+    if: github.repository_owner == 'fukayatti'
     steps:
       - uses: actions/checkout@v4
       - name: Validate
